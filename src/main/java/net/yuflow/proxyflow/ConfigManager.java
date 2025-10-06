@@ -1,5 +1,10 @@
 package net.yuflow.proxyflow;
 
+import org.spongepowered.configurate.CommentedConfigurationNode;
+import org.spongepowered.configurate.ConfigurateException;
+import org.spongepowered.configurate.serialize.SerializationException;
+import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -9,10 +14,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.spongepowered.configurate.CommentedConfigurationNode;
-import org.spongepowered.configurate.ConfigurateException;
-import org.spongepowered.configurate.serialize.SerializationException;
-import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
 public class ConfigManager {
     private final Logger logger;
@@ -31,11 +32,11 @@ public class ConfigManager {
                     if (in != null) {
                         Files.copy(in, configFile);
                     } else {
-                        logger.severe("Die Standard-Konfigurationsdatei 'config.yml' konnte nicht in den Ressourcen gefunden werden!");
+                        logger.severe("Could not find the default 'config.yml' in resources!");
                     }
                 }
             } catch (IOException e) {
-                logger.log(Level.SEVERE, "Konnte die Standard-Konfigurationsdatei nicht erstellen!", e);
+                logger.log(Level.SEVERE, "Could not create the default configuration file!", e);
             }
         }
         loadConfig();
@@ -45,7 +46,7 @@ public class ConfigManager {
         try {
             this.root = this.loader.load();
         } catch (ConfigurateException e) {
-            this.logger.log(Level.SEVERE, "Fehler beim Laden der Konfiguration!", e);
+            this.logger.log(Level.SEVERE, "Error loading configuration!", e);
         }
     }
 
@@ -53,7 +54,7 @@ public class ConfigManager {
         try {
             this.loader.save(this.root);
         } catch (ConfigurateException e) {
-            this.logger.log(Level.SEVERE, "Fehler beim Speichern der Konfiguration!", e);
+            this.logger.log(Level.SEVERE, "Error saving configuration!", e);
         }
     }
 
@@ -62,7 +63,7 @@ public class ConfigManager {
             this.root.node("maintenance", "enabled").set(enabled);
             saveConfig();
         } catch (SerializationException e) {
-            logger.log(Level.SEVERE, "Konnte den Wartungsstatus nicht in die Konfiguration schreiben!", e);
+            logger.log(Level.SEVERE, "Could not write maintenance status to configuration!", e);
         }
     }
 
@@ -75,7 +76,7 @@ public class ConfigManager {
     }
 
     public String getMaintenanceKickMessage() {
-        return this.root.node("maintenance", "kick-message").getString("&cDer Server befindet sich im Wartungsmodus.");
+        return this.root.node("maintenance", "kick-message").getString("&cThe server is currently in maintenance mode.");
     }
 
     public String getMaintenanceBypassPermission() {

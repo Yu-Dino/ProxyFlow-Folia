@@ -18,16 +18,16 @@ public class ProxyFlowCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
             if (!sender.hasPermission("proxyflow.command.reload")) {
-                sender.sendMessage(Component.text("Du hast keine Berechtigung für diesen Befehl.", NamedTextColor.RED));
+                sender.sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
                 return true;
             }
 
             this.configManager.loadConfig();
-            sender.sendMessage(Component.text("ProxyFlow Konfiguration wurde neu geladen!", NamedTextColor.GREEN));
+            sender.sendMessage(Component.text("ProxyFlow configuration has been reloaded!", NamedTextColor.GREEN));
             return true;
         }
 
-        sender.sendMessage(Component.text("Verwendung: /proxyflow reload", NamedTextColor.GRAY));
+        sender.sendMessage(Component.text("Usage: /proxyflow reload", NamedTextColor.GRAY));
         return true;
     }
 }

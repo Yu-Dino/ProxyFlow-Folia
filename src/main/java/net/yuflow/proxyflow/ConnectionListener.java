@@ -2,16 +2,6 @@ package net.yuflow.proxyflow;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
-import java.util.regex.Pattern;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -22,6 +12,17 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
+
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 public class ConnectionListener implements Listener {
     private final Logger logger;
@@ -47,21 +48,21 @@ public class ConnectionListener implements Listener {
         String username = event.getName();
 
         if (isIpBanned(ipAddress)) {
-            deny(event, "Deine IP-Adresse ist temporär gesperrt.", "");
+            deny(event, "Your IP address is temporarily banned.", "");
             return;
         }
 
         long currentTime = System.currentTimeMillis();
         Long lastConnection = connectionTimestamps.get(ipAddress);
         if (lastConnection != null && currentTime - lastConnection < CONNECTION_TIMEOUT) {
-            deny(event, "Du verbindest dich zu schnell.", "[ProxyFlow] Risiko gefunden (Anti-Bot) für IP: {0}. Join verweigert.", ipAddress);
+            deny(event, "You are connecting too fast.", "[ProxyFlow] Risk found (Anti-Bot) for IP: {0}. Denying join.", ipAddress);
             incrementViolation(ipAddress);
             return;
         }
         connectionTimestamps.put(ipAddress, currentTime);
 
         if (!VALID_USERNAME_PATTERN.matcher(username).matches()) {
-            deny(event, "Dein Benutzername enthält ungültige Zeichen.", "[ProxyFlow] Risiko gefunden (Ungültiger Name: {0}) für IP: {1}. Join verweigert.", username, ipAddress);
+            deny(event, "Your username contains invalid characters.", "[ProxyFlow] Risk found (Invalid Name: {0}) for IP: {1}. Denying join.", username, ipAddress);
             incrementViolation(ipAddress);
             return;
         }
@@ -71,14 +72,14 @@ public class ConnectionListener implements Listener {
 
     private void performExternalChecks(AsyncPlayerPreLoginEvent event, String ipAddress) {
         String apiKey = configManager.getVpnCheckApiKey();
-        if ((configManager.isVpnCheckEnabled() || configManager.isCountryBlockEnabled()) && apiKey != null && !apiKey.isEmpty() && !apiKey.equals("DEIN_API_KEY_HIER")) {
+        if ((configManager.isVpnCheckEnabled() || configManager.isCountryBlockEnabled()) && apiKey != null && !apiKey.isEmpty() && !apiKey.equals("YOUR_API_KEY_HERE")) {
             try {
                 URL url = new URL("https://proxycheck.io/v2/" + ipAddress + "?key=" + apiKey + "&vpn=1");
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
 
                 if (connection.getResponseCode() != 200) {
-                    logger.warning("[ProxyFlow] Fehler bei der API-Anfrage an proxycheck.io (Status-Code: " + connection.getResponseCode() + ")");
+                    logger.warning("[ProxyFlow] Error with API request to proxycheck.io (Status Code: " + connection.getResponseCode() + ")");
                     return;
                 }
 
@@ -99,13 +100,13 @@ public class ConnectionListener implements Listener {
                             boolean isNotWhitelisted = "whitelist".equalsIgnoreCase(mode) && !countries.contains(countryCode);
 
                             if (isBlacklisted || isNotWhitelisted) {
-                                deny(event, "Dein Land ist auf diesem Server nicht zugelassen.", "[ProxyFlow] Verbindung aus Land ({0}) von IP {1} blockiert.", countryCode, ipAddress);
+                                deny(event, "Your country is not allowed on this server.", "[ProxyFlow] Blocked connection from country ({0}) from IP {1}.", countryCode, ipAddress);
                             }
                         }
                     }
                 }
             } catch (Exception e) {
-                logger.severe("[ProxyFlow] Fehler bei der externen Überprüfung der IP-Adresse " + ipAddress + ": " + e.getMessage());
+                logger.severe("[ProxyFlow] Error during external IP address check for " + ipAddress + ": " + e.getMessage());
             }
         }
     }
@@ -118,8 +119,8 @@ public class ConnectionListener implements Listener {
         if (vpnIpCache.contains(playerIp)) {
             vpnIpCache.remove(playerIp);
             if (!player.hasPermission(configManager.getVpnBypassPermission())) {
-                event.disallow(PlayerLoginEvent.Result.KICK_OTHER, Component.text("VPNs oder Proxies sind nicht erlaubt.").color(NamedTextColor.RED));
-                logger.warning("[ProxyFlow] VPN/Proxy von IP " + playerIp + " für Spieler " + player.getName() + " blockiert.");
+                event.disallow(PlayerLoginEvent.Result.KICK_OTHER, Component.text("VPNs or proxies are not allowed.").color(NamedTextColor.RED));
+                logger.warning("[ProxyFlow] Blocked VPN/Proxy from IP " + playerIp + " for player " + player.getName() + ".");
                 return;
             }
         }
@@ -133,15 +134,15 @@ public class ConnectionListener implements Listener {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (onlinePlayer.getAddress() != null && onlinePlayer.getAddress().getAddress().getHostAddress().equals(playerIp)) {
                 if (!onlinePlayer.getUniqueId().equals(player.getUniqueId())) {
-                    event.disallow(PlayerLoginEvent.Result.KICK_OTHER, Component.text("Von deiner IP-Adresse ist bereits ein Spieler auf dem Server.").color(NamedTextColor.RED));
-                    logger.warning("[ProxyFlow] Risiko gefunden (Multi-Account) für Spieler: " + player.getName() + " (IP: " + playerIp + "). Spieler '" + onlinePlayer.getName() + "' ist bereits online.");
+                    event.disallow(PlayerLoginEvent.Result.KICK_OTHER, Component.text("There is already a player connected from your IP address.").color(NamedTextColor.RED));
+                    logger.warning("[ProxyFlow] Risk found (Multi-Account) for player: " + player.getName() + " (IP: " + playerIp + "). Player '" + onlinePlayer.getName() + "' is already online.");
                     incrementViolation(playerIp);
                     return;
                 }
             }
         }
 
-        logger.info("[ProxyFlow] Spieler " + player.getName() + " (IP: " + playerIp + ") hat alle Prüfungen bestanden.");
+        logger.info("[ProxyFlow] Player " + player.getName() + " (IP: " + playerIp + ") has passed all checks.");
     }
 
     private void incrementViolation(String ipAddress) {
@@ -150,7 +151,7 @@ public class ConnectionListener implements Listener {
             long banUntil = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(BAN_DURATION_MINUTES);
             tempBannedIps.put(ipAddress, banUntil);
             violationCounts.remove(ipAddress);
-            logger.warning("[ProxyFlow] IP-Adresse " + ipAddress + " wurde für " + BAN_DURATION_MINUTES + " Minuten temporär gesperrt!");
+            logger.warning("[ProxyFlow] IP address " + ipAddress + " has been temporarily banned for " + BAN_DURATION_MINUTES + " minutes!");
         } else {
             violationCounts.put(ipAddress, violations);
         }
@@ -163,7 +164,7 @@ public class ConnectionListener implements Listener {
         }
         if (System.currentTimeMillis() > banUntil) {
             tempBannedIps.remove(ipAddress);
-            logger.info("[ProxyFlow] Temporäre Sperre für IP " + ipAddress + " aufgehoben.");
+            logger.info("[ProxyFlow] Temporary ban for IP " + ipAddress + " has been lifted.");
             return false;
         }
         return true;

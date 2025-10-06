@@ -17,7 +17,7 @@ public class MaintenanceListener implements Listener {
     public void onServerListPing(PaperServerListPingEvent event) {
         if (configManager.isMaintenanceEnabled()) {
             event.motd(LegacyComponentSerializer.legacyAmpersand().deserialize(configManager.getMaintenanceMotd()));
-            event.setVersion("Wartung");
+            event.setVersion("Maintenance");
             event.setProtocolVersion(-1);
             event.setHidePlayers(true);
         }

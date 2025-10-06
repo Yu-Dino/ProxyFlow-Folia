@@ -27,7 +27,7 @@ public class MaintenanceCommand implements CommandExecutor {
         configManager.setMaintenance(newState);
 
         if (newState) {
-            sender.sendMessage(Component.text("Wartungsmodus wurde aktiviert.", NamedTextColor.YELLOW));
+            sender.sendMessage(Component.text("Maintenance mode has been enabled.", NamedTextColor.YELLOW));
 
             Component kickMessage = LegacyComponentSerializer.legacyAmpersand().deserialize(configManager.getMaintenanceKickMessage());
             String bypassPermission = configManager.getMaintenanceBypassPermission();
@@ -38,7 +38,7 @@ public class MaintenanceCommand implements CommandExecutor {
                 }
             }
         } else {
-            sender.sendMessage(Component.text("Wartungsmodus wurde deaktiviert.", NamedTextColor.GREEN));
+            sender.sendMessage(Component.text("Maintenance mode has been disabled.", NamedTextColor.GREEN));
         }
         return true;
     }
