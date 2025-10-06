@@ -1,0 +1,31 @@
+name: ProxyFlowFolia
+version: 1.1.2-Folia
+main: net.yuflow.proxyflow.ProxyFlowFolia
+api-version: '1.20'
+authors: Yu_Dino
+description: Ein Sicherheitsplugin für deinen Folia Server!
+
+commands:
+  maintenance:
+    description: Schaltet den Wartungsmodus an oder aus.
+    usage: /<command>
+    aliases: [wartung]
+    permission: proxyflow.command.maintenance
+  proxyflow:
+    description: Hauptbefehl für ProxyFlow.
+    usage: /<command> [reload]
+    aliases: [pf]
+    permission: proxyflow.command.reload
+
+permissions:
+  proxyflow.command.maintenance:
+    description: Erlaubt das Umschalten des Wartungsmodus.
+    default: op
+  proxyflow.command.reload:
+    default: op
+  proxyflow.maintenance.bypass:
+    description: Erlaubt das Betreten des Servers im Wartungsmodus.
+    default: op
+  proxyflow.security.vpn.bypass:
+    description: Erlaubt das Betreten mit einer erkannten VPN/Proxy-IP.
+    default: op
