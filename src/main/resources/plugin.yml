@@ -4,6 +4,7 @@ main: net.yuflow.proxyflow.ProxyFlowFolia
 api-version: '1.20'
 authors: Yu_Dino
 description: Ein Sicherheitsplugin für deinen Folia Server!
+folia-supported: true
 
 commands:
   maintenance:
