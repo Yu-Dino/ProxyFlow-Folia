@@ -28,8 +28,8 @@ public class ProxyFlowFolia extends JavaPlugin {
         getLogger().info("|   |    |   |  | ||       ||   _   |  |   |  |   |    |       ||       ||   _   |   |     |  |   |            #*#+*##**++***##+****##%%%            ");
         getLogger().info("|___|    |___|  |_||_______||__| |__|  |___|  |___|    |_______||_______||__| |__|    |___|   |___|            @%@*##*#**##%%%%%@%%%%%@              ");
         getLogger().info("                                                                                                                @@%%#%**#%%%@%%%@@@@@@@              ");
-        getLogger().info("                      ProxyFlow v1.1.2-Folia powered by Yu_Di                                                    %*%###%%%%@@@@@@@@                  ");
-        getLogger().info("                     Plugin has been initialized successfully!                                                  *@@%%%%%%#%%%%@@@                    ");
+        getLogger().info("                      ProxyFlow v1.1.2-Folia powered by Yu_Dino                                                  %*%###%%%%@@@@@@@@                  ");
+        getLogger().info("                      Plugin has been initialized successfully!                                                 *@@%%%%%%#%%%%@@@                    ");
         getLogger().info("                                                                                                              +     @@@@@@@@                         ");
         getLogger().info("                                                                                                          +                                          ");
     }
