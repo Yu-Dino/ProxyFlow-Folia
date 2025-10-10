@@ -30,7 +30,7 @@ public class ConnectionListener implements Listener {
     private final Gson gson = new Gson();
     private final Map<String, Long> connectionTimestamps = new ConcurrentHashMap<>();
     private static final long CONNECTION_TIMEOUT = 2000L;
-    private static final Pattern VALID_USERNAME_PATTERN = Pattern.compile("^[a-zA-Z0-9_]{3,16}$");
+    private static final Pattern VALID_USERNAME_PATTERN = Pattern.compile("^[a-zA-Z0-9_.]{3,16}$");
     private final Map<String, Integer> violationCounts = new ConcurrentHashMap<>();
     private final Map<String, Long> tempBannedIps = new ConcurrentHashMap<>();
     private static final int MAX_VIOLATIONS = 3;
