@@ -110,4 +110,24 @@ public class ConfigManager {
             return Collections.emptyList();
         }
     }
+
+    public boolean isMultiAccountCheckEnabled() {
+        return this.root.node("security", "multi-account-check", "enabled").getBoolean(true);
+    }
+
+    public String getMultiAccountBypassPermission() {
+        return this.root.node("security", "multi-account-check", "bypass-permission").getString("proxyflow.security.multiaccount.bypass");
+    }
+
+    public boolean isQueueEnabled() {
+        return this.root.node("queue", "enabled").getBoolean(false);
+    }
+
+    public String getQueueKickMessage() {
+        return this.root.node("queue", "kick-message").getString("You are in queue.");
+    }
+
+    public int getJoinsPerSecond() {
+        return this.root.node("queue", "joins-per-second").getInt(5);
+    }
 }

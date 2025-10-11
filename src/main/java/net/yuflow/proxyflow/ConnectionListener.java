@@ -131,13 +131,17 @@ public class ConnectionListener implements Listener {
             return;
         }
 
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            if (onlinePlayer.getAddress() != null && onlinePlayer.getAddress().getAddress().getHostAddress().equals(playerIp)) {
-                if (!onlinePlayer.getUniqueId().equals(player.getUniqueId())) {
-                    event.disallow(PlayerLoginEvent.Result.KICK_OTHER, Component.text("There is already a player connected from your IP address.").color(NamedTextColor.RED));
-                    logger.warning("[ProxyFlow] Risk found (Multi-Account) for player: " + player.getName() + " (IP: " + playerIp + "). Player '" + onlinePlayer.getName() + "' is already online.");
-                    incrementViolation(playerIp);
-                    return;
+        if (configManager.isMultiAccountCheckEnabled()) {
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                if (onlinePlayer.getAddress() != null && onlinePlayer.getAddress().getAddress().getHostAddress().equals(playerIp)) {
+                    if (!onlinePlayer.getUniqueId().equals(player.getUniqueId())) {
+                        if (!player.hasPermission(configManager.getMultiAccountBypassPermission())) {
+                            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, Component.text("There is already a player connected from your IP address.").color(NamedTextColor.RED));
+                            logger.warning("[ProxyFlow] Risk found (Multi-Account) for player: " + player.getName() + " (IP: " + playerIp + "). Player '" + onlinePlayer.getName() + "' is already online.");
+                            incrementViolation(playerIp);
+                            return;
+                        }
+                    }
                 }
             }
         }

@@ -31,3 +31,6 @@ permissions:
   proxyflow.security.vpn.bypass:
     description: Allows joining with a detected VPN/Proxy IP.
     default: op
+  proxyflow.security.multiaccount.bypass:
+    description: Allows joining from an IP address that is already in use.
+    default: op
